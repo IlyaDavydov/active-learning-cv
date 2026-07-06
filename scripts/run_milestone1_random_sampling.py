@@ -1,3 +1,14 @@
+"""
+Run Milestone 1A: synthetic random sampling pipeline.
+
+This script creates synthetic labels, selects an initial labeled subset
+using random sampling, computes class distribution, and saves the resulting
+split and report files.
+
+The goal of this script is to validate the core active learning pipeline
+before connecting a real dataset such as CIFAR-10.
+"""
+
 from pathlib import Path
 
 import numpy as np
@@ -9,6 +20,16 @@ from alcv.utils.csv import save_class_distribution_csv
 
 
 def main() -> None:
+    """
+    Runs the Milestone 1A random sampling pipeline.
+
+    The pipeline:
+        1. Creates synthetic class labels.
+        2. Samples an initial labeled set.
+        3. Computes class distribution.
+        4. Saves split indices and class distribution report.
+        5. Prints a short terminal summary.
+    """
     project_root = Path(__file__).resolve().parents[1]
 
     dataset_size = 50000
@@ -16,6 +37,8 @@ def main() -> None:
     initial_labeled_size = 1000
     seed = 42
 
+    # Synthetic labels are used only for Milestone 1A.
+    # They will be replaced by real CIFAR-10 labels in Milestone 1B.
     labels = np.arange(dataset_size) % num_classes
 
     labeled_indices, unlabeled_indices = random_sample_indices(
@@ -30,6 +53,7 @@ def main() -> None:
         num_classes=num_classes,
     )
 
+    # Build output paths relative to the project root.
     labeled_indices_path = project_root / "data/splits/milestone1/random_labeled_indices.json"
     unlabeled_indices_path = project_root / "data/splits/milestone1/random_unlabeled_indices.json"
     class_distribution_path = project_root / "reports/tables/milestone1/class_distribution.csv"

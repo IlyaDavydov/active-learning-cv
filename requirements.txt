@@ -9,4 +9,6 @@ opencv-python
 jupyter
 notebook
 ipykernel
+torch
+torchvision
 

@@ -1,15 +1,21 @@
+# Python
 .venv/
 __pycache__/
 *.pyc
+.ipynb_checkpoints/
 
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Data
 data/raw/
 data/interim/
 data/processed/
+
+# Model artifacts
 models/
+
+# Run logs
 reports/runs/
-
-.ipynb_checkpoints/
-.DS_Store
-.vscode/
-
-.idea/
