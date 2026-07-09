@@ -41,10 +41,6 @@ def main() -> None:
 
     train_dataset, test_dataset = load_cifar10(data_dir=data_dir)
 
-    temp_image, temp_label = train_dataset[0]
-    print(f'test image: {temp_image}, shape: {temp_image.shape} \n')
-    print(f'test label: {temp_label}\n')
-
     dataset_size = len(train_dataset)
     labels = train_dataset.targets
     class_names = train_dataset.classes
