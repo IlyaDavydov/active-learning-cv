@@ -20,12 +20,12 @@ from alcv.models.simple_cnn import SimpleCNN
 import torch.optim as optim
 import torch.nn as nn
 import torch
-import matplotlib.pyplot as plt
-import csv
-from alcv.utils.evaluation import compute_accuracy_and_cross_entropy_loss
+from alcv.evaluation.evaluation import compute_accuracy_and_cross_entropy_loss
 from alcv.utils.save_plots import save_line_plot
+from alcv.utils.save_csv_from_columns import save_csv_from_columns
 
 def main() -> None:
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     project_root = Path(__file__).resolve().parents[1]
     data_dir = project_root / "data/raw"
     trainset, testset = load_cifar10(data_dir)
@@ -36,23 +36,27 @@ def main() -> None:
     loader = DataLoader(labeled_subset, batch_size=10, shuffle=True)
     test_loader = DataLoader(testset, batch_size=10)
     model = SimpleCNN()
+    model.to(device)
 
     optimizer = optim.SGD(model.parameters(), lr=0.01)
 
     epochs = [[], [], [], [], []] # num, train_acc, train_loss, test_acc, test_loss
 
+    criterion = nn.CrossEntropyLoss()
+
     for epoch in range(10):
         model.train()
         for images, labels in loader:
+            images = images.to(device)
+            labels = labels.to(device)
             optimizer.zero_grad()
             outputs = model(images)
-            criterion = nn.CrossEntropyLoss()
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
 
-        train_accuracy, train_loss = compute_accuracy_and_cross_entropy_loss(model, loader)
-        test_accuracy, test_loss = compute_accuracy_and_cross_entropy_loss(model, test_loader)
+        train_accuracy, train_loss = compute_accuracy_and_cross_entropy_loss(model, loader, device)
+        test_accuracy, test_loss = compute_accuracy_and_cross_entropy_loss(model, test_loader, device)
 
         epochs[0].append(epoch)
         epochs[1].append(train_accuracy)
@@ -61,19 +65,14 @@ def main() -> None:
         epochs[4].append(test_loss)
 
         print(f'after epoch {epoch}: \n'
-              f'train accuracy: {train_accuracy} \n'
-              f'train_loss: {train_loss}  \n' 
-              f'test_accuracy: {test_accuracy} \n'
-              f'test_loss: {test_loss} \n')
+              f'train accuracy: {round(train_accuracy, 3)} \n'
+              f'train_loss: {round(train_loss, 3)}  \n' 
+              f'test_accuracy: {round(test_accuracy, 3)} \n'
+              f'test_loss: {round(test_loss, 3)} \n')
 
     save_path_csv = project_root / "reports/tables/milestone2/metrics.csv"
-    save_path_csv.parent.mkdir(parents=True, exist_ok=True)
-    header = ['epoch', 'train_accuracy', 'train_loss', 'test_accuracy', 'test_loss']
-
-    with open(save_path_csv, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(header)
-        writer.writerows(zip(*epochs))
+    header = ["epoch", "train_accuracy", "train_loss", "test_accuracy", "test_loss"]
+    save_csv_from_columns(save_path=save_path_csv, header=header, columns=epochs)
 
     save_line_plot(
         x_values=epochs[0],
