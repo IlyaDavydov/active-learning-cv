@@ -35,3 +35,39 @@ def save_class_distribution_csv(
                     "count": distribution[class_id],
                 }
             )
+
+def load_column_from_csv(
+    file_path: Path,
+    column_name: str
+) -> list[float]:
+    """
+    Загружает значения одного столбца из CSV-файла.
+
+    Args:
+        file_path:
+            Путь к CSV-файлу.
+
+        column_name:
+            Название столбца, значения которого нужно загрузить.
+
+    Returns:
+        Список значений выбранного столбца.
+    """
+    values = []
+
+    with file_path.open("r", newline="", encoding="utf-8") as csv_file:
+        reader = csv.DictReader(csv_file)
+
+        if reader.fieldnames is None:
+            raise ValueError("CSV-файл не содержит заголовка.")
+
+        if column_name not in reader.fieldnames:
+            raise ValueError(
+                f"Столбец '{column_name}' не найден. "
+                f"Доступные столбцы: {reader.fieldnames}"
+            )
+
+        for row in reader:
+            values.append(float(row[column_name]))
+
+    return values
