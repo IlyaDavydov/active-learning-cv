@@ -16,16 +16,16 @@ from alcv.utils.update_indices import update_labeled_and_unlabeled_indices
 from alcv.active_learning.least_confidence import DatasetWithIndices
 from alcv.utils.csv import load_column_from_csv
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data/raw"
 
-SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone5/margin_sampling.csv"
-SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone5"
-PATH_TO_CSV_FROM_MILESTONE3 = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment.csv"
+SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone5/margin_sampling_init_labeled_size10000.csv"
+SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone5/init_labeled_size10000"
+PATH_TO_CSV_FROM_MILESTONE3 = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_initial_labeled_size_10000.csv"
 
-NUM_ROUNDS = 25
+NUM_ROUNDS = 16
 SAMPLE_SIZE = 1000
+INITIAL_LABELED_SIZE = 10000
 SEED = 42
 BATCH_SIZE = 10
 LEARNING_RATE = 0.01
@@ -87,7 +87,7 @@ def main() -> None:
         if round_idx == 0:
             labeled_indices, unlabeled_indices = random_sample_indices(
                 len(train_dataset),
-                SAMPLE_SIZE,
+                INITIAL_LABELED_SIZE,
                 SEED
             )
             selected_batch_size = 0

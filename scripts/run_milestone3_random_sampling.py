@@ -19,8 +19,9 @@ DATA_DIR = PROJECT_ROOT / "data/raw"
 SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_initial_labeled_size_10000.csv"
 SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/initial_labeled_size_10000"
 
-NUM_ROUNDS = 25
-SAMPLE_SIZE = 1000
+NUM_ROUNDS = 16
+INITIAL_LABELED_SIZE = 10_000
+SAMPLE_SIZE = 1_000
 SEED = 42
 BATCH_SIZE = 10
 LEARNING_RATE = 0.01
@@ -78,10 +79,9 @@ def main() -> None:
 
     for round_idx in range(NUM_ROUNDS):
         if round_idx == 0:
-            sample_size_start = SAMPLE_SIZE * 10
             labeled_indices, unlabeled_indices = random_sample_indices(
                 len(train_dataset),
-                sample_size_start,
+                INITIAL_LABELED_SIZE,
                 SEED
             )
             selected_batch_size = 0
