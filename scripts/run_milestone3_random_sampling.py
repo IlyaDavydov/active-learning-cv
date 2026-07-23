@@ -16,8 +16,8 @@ from alcv.models.simple_cnn import SimpleCNN
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data/raw"
 
-SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment.csv"
-SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3"
+SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_initial_labeled_size_10000.csv"
+SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/initial_labeled_size_10000"
 
 NUM_ROUNDS = 25
 SAMPLE_SIZE = 1000
@@ -78,9 +78,10 @@ def main() -> None:
 
     for round_idx in range(NUM_ROUNDS):
         if round_idx == 0:
+            sample_size_start = SAMPLE_SIZE * 10
             labeled_indices, unlabeled_indices = random_sample_indices(
                 len(train_dataset),
-                SAMPLE_SIZE,
+                sample_size_start,
                 SEED
             )
             selected_batch_size = 0
