@@ -11,22 +11,26 @@ from alcv.evaluation.evaluation import compute_accuracy_and_cross_entropy_loss
 from alcv.utils.save_plots import save_line_plot
 from alcv.utils.save_csv_from_columns import save_csv_from_columns
 from alcv.models.simple_cnn import SimpleCNN
+from alcv.models.simple_cnn_with_dropout import SimpleCNNWithDropout
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data/raw"
 
-SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_initial_labeled_size_10000.csv"
-SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/initial_labeled_size_10000"
+SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_with_dropout.csv"
+SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/with_dropout"
 
-NUM_ROUNDS = 16
-INITIAL_LABELED_SIZE = 10_000
-SAMPLE_SIZE = 1_000
+NUM_ROUNDS = 25
+INITIAL_LABELED_SIZE = 1000
+SAMPLE_SIZE = 1000
 SEED = 42
 BATCH_SIZE = 10
 LEARNING_RATE = 0.01
 MOMENTUM = 0.9
 EPOCHS = 8
+
+# Dropout params
+DROPOUT = 0.3
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -55,6 +59,7 @@ def main() -> None:
         "train_loss",
         "test_accuracy",
         "test_loss",
+        "Dropout"
     ]
 
     strategy_column = []
@@ -71,6 +76,8 @@ def main() -> None:
     train_loss_column = []
     test_accuracy_column = []
     test_loss_column = []
+    dropout_column = []
+
 
     criterion = nn.CrossEntropyLoss()
 
@@ -104,8 +111,7 @@ def main() -> None:
 
         torch.manual_seed(SEED + round_idx)
 
-        model = SimpleCNN()
-        model.to(device)
+        model = SimpleCNNWithDropout(DROPOUT).to(device)
 
         optimizer = optim.SGD(
             model.parameters(),
@@ -140,7 +146,7 @@ def main() -> None:
             device
         )
 
-        strategy_column.append("random_sampling")
+        strategy_column.append("random_sampling_with_dropout")
         seed_column.append(SEED)
         round_column.append(round_idx)
         labeled_size_column.append(len(labeled_indices))
@@ -154,6 +160,7 @@ def main() -> None:
         train_loss_column.append(train_loss)
         test_accuracy_column.append(test_accuracy)
         test_loss_column.append(test_loss)
+        dropout_column.append(DROPOUT)
 
         print(
             f"after round {round_idx}:\n"
@@ -179,6 +186,7 @@ def main() -> None:
         train_loss_column,
         test_accuracy_column,
         test_loss_column,
+        dropout_column
     ]
 
     save_csv_from_columns(
