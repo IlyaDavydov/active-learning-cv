@@ -21,7 +21,7 @@ SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experi
 SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/with_dropout"
 
 NUM_ROUNDS = 9
-INITIAL_LABELED_SIZE = 1000
+INITIAL_LABELED_SIZE = 500
 SAMPLE_SIZE = 500
 SEED = 42
 BATCH_SIZE = 32
