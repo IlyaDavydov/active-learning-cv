@@ -24,16 +24,16 @@ SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone7/mc_dropout_entropy_sam
 SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone7"
 PATH_TO_CSV_FROM_MILESTONE3 = (PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_with_dropout.csv")
 
-NUM_ROUNDS = 25
-SAMPLE_SIZE = 1000
+NUM_ROUNDS = 9
+SAMPLE_SIZE = 500
 SEED = 42
-BATCH_SIZE = 10
+BATCH_SIZE = 64
 LEARNING_RATE = 0.01
 MOMENTUM = 0.9
-EPOCHS = 8
+EPOCHS = 5
 
 # Dropout params
-T = 20
+T = 10
 DROPOUT = 0.3
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -20,14 +20,15 @@ DATA_DIR = PROJECT_ROOT / "data/raw"
 SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_with_dropout.csv"
 SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/with_dropout"
 
-NUM_ROUNDS = 25
+NUM_ROUNDS = 9
 INITIAL_LABELED_SIZE = 1000
-SAMPLE_SIZE = 1000
+SAMPLE_SIZE = 500
 SEED = 42
-BATCH_SIZE = 10
+BATCH_SIZE = 32
 LEARNING_RATE = 0.01
 MOMENTUM = 0.9
-EPOCHS = 8
+EPOCHS = 5
+
 
 # Dropout params
 DROPOUT = 0.3
