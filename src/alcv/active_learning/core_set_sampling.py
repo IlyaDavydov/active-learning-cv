@@ -8,33 +8,44 @@ def core_set_sampling(model : SimpleCNN, labeled_loader, unlabeled_loader, sampl
     model.eval()
 
     labeled_embeddings, unlabeled_embeddings = [], []
-
-    for images, _, indices in labeled_loader:
-        images = images.to(device)
-        outputs = model.get_embeddings(images)
-        labeled_embeddings.append(zip(outputs, indices))
-
-    for images, _, indices in unlabeled_loader:
-        images = images.to(device)
-        outputs = model.get_embeddings(images)
-        unlabeled_embeddings.append(zip(outputs, indices))
-
-    #labeled_embeddings, unlabeled_embeddings = torch.stack(labeled_embeddings), torch.stack(unlabeled_embeddings)
-
     indices_and_scores = []
-    temp = []
 
-    for u_embedding, index in unlabeled_embeddings:
-        temp = []
-        for l_embedding, index in labeled_embeddings:
-            temp.append((euclidean_distance(u_embedding, l_embedding), index))
+    with torch.no_grad():
+        for images, _, indices in labeled_loader:
+            images = images.to(device)
+            outputs = model.get_embeddings(images)
+            pairs = get_pairs(images, outputs)
+            labeled_embeddings.append(pairs)
 
-    temp = sorted(temp, key=lambda x: x[0], reverse=True)
-    indices_and_scores.append(temp[0], temp[1])
+        for images, _, indices in unlabeled_loader:
+            images = images.to(device)
+            outputs = model.get_embeddings(images)
+            pairs = get_pairs(images, outputs)
+            unlabeled_embeddings.append(pairs)
 
+        labeled_embeddings = [[pair for pair in vector] for vector in labeled_embeddings]
+        unlabeled_embeddings = [[pair for pair in vector] for vector in unlabeled_embeddings]
+
+
+        for unlabeled_embedding, unlabeled_index in labeled_embeddings:
+            distances_for_embedding = []
+            for labeled_embedding, unlabeled_index in unlabeled_embeddings:
+                distances_for_embedding.append([euclidean_distance(unlabeled_embedding, labeled_embedding), unlabeled_index])
+            best_distance_and_index = sorted(distances_for_embedding, key=lambda x: x[0], reverse=False)[0]
+            indices_and_scores.append(best_distance_and_index)
 
 def euclidean_distance(x, y):
     sum = 0
     for (c1, c2) in zip(x, y):
         sum += math.pow((c1 - c2), 2)
     return math.sqrt(sum)
+
+def get_pairs(arr1, arr2):
+    pairs = []
+    if len(arr1) == len(arr2):
+        for i in range(len(arr1)):
+            pair = [arr1[i], arr2[i]]
+            pairs.append(pair)
+    else:
+        raise ValueError("arr1 and arr2 must be the same length")
+    return pairs
