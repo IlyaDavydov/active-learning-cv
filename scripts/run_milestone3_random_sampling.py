@@ -17,8 +17,8 @@ from alcv.models.simple_cnn_with_dropout import SimpleCNNWithDropout
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data/raw"
 
-SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_with_dropout.csv"
-SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/with_dropout"
+SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_step_500.csv"
+SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone3/step500"
 
 NUM_ROUNDS = 9
 INITIAL_LABELED_SIZE = 500
@@ -28,10 +28,6 @@ BATCH_SIZE = 32
 LEARNING_RATE = 0.01
 MOMENTUM = 0.9
 EPOCHS = 5
-
-
-# Dropout params
-DROPOUT = 0.3
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -59,8 +55,7 @@ def main() -> None:
         "train_accuracy",
         "train_loss",
         "test_accuracy",
-        "test_loss",
-        "Dropout"
+        "test_loss"
     ]
 
     strategy_column = []
@@ -112,7 +107,7 @@ def main() -> None:
 
         torch.manual_seed(SEED + round_idx)
 
-        model = SimpleCNNWithDropout(DROPOUT).to(device)
+        model = SimpleCNN().to(device)
 
         optimizer = optim.SGD(
             model.parameters(),
@@ -147,7 +142,7 @@ def main() -> None:
             device
         )
 
-        strategy_column.append("random_sampling_with_dropout")
+        strategy_column.append("random_sampling")
         seed_column.append(SEED)
         round_column.append(round_idx)
         labeled_size_column.append(len(labeled_indices))
@@ -161,7 +156,7 @@ def main() -> None:
         train_loss_column.append(train_loss)
         test_accuracy_column.append(test_accuracy)
         test_loss_column.append(test_loss)
-        dropout_column.append(DROPOUT)
+        #dropout_column.append(DROPOUT)
 
         print(
             f"after round {round_idx}:\n"
