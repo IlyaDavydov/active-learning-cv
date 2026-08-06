@@ -1,21 +1,32 @@
 import random
 import torch
 
+
 def kmeans_plus_plus(embeddings, sample_size):
     indices = []
-    centroids = []
-    rand_number = random.randint(0, len(embeddings)-1)
-    random_embedding = embeddings[rand_number] # tensor [100]
 
-    for i in range(sample_size):
-        if i == 0:
-            centroids.append(random_embedding)
-            indices.append(rand_number)
-            centroids = torch.tensor(centroids).unsqueeze(0) # tensor [N, 100]
-            indices = torch.tensor(indices).unsqueeze(0) # tensor [N, 1]
+    first_index = torch.argmax(torch.sum(embeddings ** 2, dim=1)).item()
+    actual_centroid = embeddings[first_index]
+    indices.append(first_index)
+
+    min_distances = torch.cdist(embeddings, actual_centroid.unsqueeze(0), p=2).squeeze(1) ** 2
+
+    for i in range(1, sample_size):
+        min_distances[indices] = 0
+
+        if torch.sum(min_distances) == 0:
+            available_indices = [index for index in range(len(embeddings)) if index not in indices]
+            actual_index = random.choice(available_indices)
         else:
-            euclidian_distance = torch.cdist(embeddings, centroids, p=2) # tensor [embeddings_size, centroids_length]
-            euclidian_distance_squared = euclidian_distance ** 2 # tensor [embeddings_size, centroids_length]
-            euclidian_distance_squared_sum = torch.sum(euclidian_distance_squared, dim=1) # embeddings_size
-            probabilities = euclidian_distance_squared / euclidian_distance_squared_sum.unsqueeze(1) # [embeddings_size, centroids_length]
+            probabilities = min_distances / torch.sum(min_distances)
+            actual_index = torch.multinomial(probabilities, 1).item()
+
+        actual_centroid = embeddings[actual_index]
+        indices.append(actual_index)
+
+        actual_distances = torch.cdist(embeddings, actual_centroid.unsqueeze(0), p=2).squeeze(1) ** 2
+        min_distances = torch.minimum(min_distances, actual_distances)
+
+    return torch.tensor(indices, device=embeddings.device)
+
 
