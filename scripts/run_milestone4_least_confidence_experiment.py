@@ -83,6 +83,7 @@ def main() -> None:
     train_dataset_with_indices = DatasetWithIndices(train_dataset)
 
     for round_idx in range(NUM_ROUNDS):
+        torch.manual_seed(SEED + round_idx)
         if round_idx == 0:
             labeled_indices, unlabeled_indices = random_sample_indices(
                 len(train_dataset),
@@ -102,8 +103,6 @@ def main() -> None:
             selected_indices = least_confidence(model, unlabeled_loader, sample_size=SAMPLE_SIZE)
             labeled_indices, unlabeled_indices = update_labeled_and_unlabeled_indices(labeled_indices, unlabeled_indices, selected_indices)
             selected_batch_size = len(selected_indices)
-
-        torch.manual_seed(SEED + round_idx)
 
         model = SimpleCNN().to(device)
 
