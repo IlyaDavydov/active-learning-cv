@@ -116,22 +116,22 @@ def main() -> None:
                 labels = labels.to(device)
 
                 optimizer.zero_grad()
-                loss_optimizer.zero_grad()
 
                 features1, features2, features3, outputs = model.get_learning_loss_features(images)
 
                 real_losses = criterion(outputs, labels)
                 classification_loss = real_losses.mean()
 
-                predicted_losses = loss_model(features1, features2, features3).flatten()
+                classification_loss.backward()
+                optimizer.step()
+
+                loss_optimizer.zero_grad()
+
+                predicted_losses = loss_model(features1.detach(), features2.detach(), features3.detach()).flatten()
 
                 loss_prediction_loss = loss_prediction_criterion(predicted_losses, real_losses.detach())
 
-                loss = classification_loss + loss_prediction_loss
-
-                loss.backward()
-
-                optimizer.step()
+                loss_prediction_loss.backward()
                 loss_optimizer.step()
 
         train_accuracy, train_loss = compute_accuracy_and_cross_entropy_loss(model, train_loader, device)
