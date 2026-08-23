@@ -26,7 +26,7 @@ SAVE_PATH_CSV = PROJECT_ROOT / "reports/tables/milestone12/vaal_experiment.csv"
 SAVE_DIR_PLOTS = PROJECT_ROOT / "reports/figures/milestone12"
 PATH_TO_CSV_FROM_MILESTONE3 = PROJECT_ROOT / "reports/tables/milestone3/random_sampling_experiment_step_500.csv"
 
-NUM_ROUNDS = 9
+NUM_ROUNDS = 2
 SAMPLE_SIZE = 500
 SEED = 42
 BATCH_SIZE = 32
@@ -34,8 +34,8 @@ LEARNING_RATE = 0.01
 MOMENTUM = 0.9
 EPOCHS = 5
 
-VAAL_BATCH_SIZE = 128
-VAAL_EPOCHS = 5
+VAAL_BATCH_SIZE = 256
+VAAL_EPOCHS = 1
 VAAL_LEARNING_RATE = 0.0005
 BETA = 1.0
 ADVERSARY_PARAM = 1.0
