@@ -67,3 +67,28 @@ def vaal_train(vae, discriminator, labeled_loader, unlabeled_loader, epochs, lr=
             optimizer_discriminator.step()
 
     return vae, discriminator
+
+def vaal_sampling(vae, discriminator, unlabeled_loader, sample_size):
+    vae = vae.to(device)
+    discriminator = discriminator.to(device)
+
+    vae.eval()
+    discriminator.eval()
+
+    indices_and_scores = []
+
+    with torch.no_grad():
+        for images, _, indices in unlabeled_loader:
+            images = images.to(device)
+
+            _, _, mu, _ = vae(images)
+            scores = discriminator(mu).squeeze(1)
+
+            for index, score in zip(indices, scores):
+                indices_and_scores.append((index.item(), score.item()))
+
+    indices_and_scores.sort(key=lambda pair: pair[1])
+
+    selected_indices = [index for index, _ in indices_and_scores[:sample_size]]
+
+    return selected_indices
