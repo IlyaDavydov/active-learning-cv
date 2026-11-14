@@ -37,7 +37,7 @@ def badge_sampling(model, unlabeled_loader, sample_size, *, seed=42):
 
         gradient_embeddings = torch.flatten(gradient_embeddings, start_dim=1) # unlabeled_size, 1000
 
-        selected_gradient_indices = kmeans_plus_plus(gradient_embeddings, sample_size)
+        selected_gradient_indices = kmeans_plus_plus(gradient_embeddings, sample_size, seed=seed)
         selected_indices = unlabeled_indices[selected_gradient_indices]
 
         return selected_indices.detach().cpu().tolist()
