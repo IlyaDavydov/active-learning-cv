@@ -2,10 +2,8 @@ import torch
 import torch.nn.functional as F
 from alcv.utils.kmeans_plus_plus import kmeans_plus_plus
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-def badge_sampling(model, unlabeled_loader, sample_size):
-    model.to(device)
+def badge_sampling(model, unlabeled_loader, sample_size, *, seed=42):
+    device = next(model.parameters()).device
     model.eval()
 
     unlabeled_embeddings = []
@@ -42,7 +40,7 @@ def badge_sampling(model, unlabeled_loader, sample_size):
         selected_gradient_indices = kmeans_plus_plus(gradient_embeddings, sample_size)
         selected_indices = unlabeled_indices[selected_gradient_indices]
 
-        return selected_indices
+        return selected_indices.detach().cpu().tolist()
 
 
 

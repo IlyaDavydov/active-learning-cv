@@ -54,11 +54,6 @@ import torch
 from torch.utils.data import Dataset
 
 
-device = torch.device(
-    "cuda" if torch.cuda.is_available() else "cpu"
-)
-
-
 class DatasetWithIndices(Dataset):
 
     def __init__(self, dataset):
@@ -74,7 +69,7 @@ class DatasetWithIndices(Dataset):
 
 
 def least_confidence(model, unlabeled_loader, sample_size):
-    model = model.to(device)
+    device = next(model.parameters()).device
     model.eval()
 
     indices_and_scores = []

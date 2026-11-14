@@ -1,22 +1,14 @@
 import torch
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def entropy_calculate(probabilities_vector: torch.Tensor) -> list[torch.Tensor]:
-    entropy_vector = []
+def entropy_calculate(probabilities_vector: torch.Tensor,) -> list[torch.Tensor]:
+    tiny = torch.finfo(probabilities_vector.dtype).tiny
 
-    for probability_vector in probabilities_vector:
-        entropy = 0
+    entropies = -(probabilities_vector * probabilities_vector.clamp_min(tiny).log2()).sum(dim=1)
 
-        for probability in probability_vector:
-            if probability > 0:
-                entropy -= probability * torch.log2(probability)
-
-        entropy_vector.append(entropy)
-
-    return entropy_vector
+    return list(entropies.unbind(0))
 
 def entropy_sampling(model, unlabeled_loader, sample_size):
-    model = model.to(device)
+    device = next(model.parameters()).device
     model.eval()
 
     indices_and_scores = []

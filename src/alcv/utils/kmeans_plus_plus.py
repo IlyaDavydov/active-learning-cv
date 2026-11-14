@@ -2,7 +2,7 @@ import random
 import torch
 
 
-def kmeans_plus_plus(embeddings, sample_size):
+def kmeans_plus_plus(embeddings, sample_size, *, seed=42):
     indices = []
 
     first_index = torch.argmax(torch.sum(embeddings ** 2, dim=1)).item()

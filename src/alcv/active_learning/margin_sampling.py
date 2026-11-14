@@ -1,11 +1,7 @@
 import torch
 
-device = torch.device(
-    "cuda" if torch.cuda.is_available() else "cpu"
-)
-
 def margin_sampling(model, unlabeled_loader, sample_size):
-    model = model.to(device)
+    device = next(model.parameters()).device
     model.eval()
 
     indices_and_scores = []

@@ -3,12 +3,8 @@ import torch.nn as nn
 
 from alcv.active_learning.entropy_sampling import entropy_calculate
 
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
 def BALD_sampling(model, unlabeled_loader, sample_size, T: int):
-    model = model.to(device)
+    device = next(model.parameters()).device
     model.eval()
 
     for module in model.modules():
@@ -52,7 +48,7 @@ def BALD_sampling(model, unlabeled_loader, sample_size, T: int):
             bald_scores = predictive_entropy - expected_entropy
 
             for index, score in zip(indices, bald_scores):
-                indices_and_scores.append((index, score))
+                indices_and_scores.append((int(index.item()), float(score.item())))
 
     indices_and_scores.sort(key=lambda x: x[1], reverse=True)
 

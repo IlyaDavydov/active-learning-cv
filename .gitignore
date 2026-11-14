@@ -15,7 +15,7 @@ data/interim/
 data/processed/
 
 # Model artifacts
-models/
+/models/
 
 # Run logs
 reports/runs/

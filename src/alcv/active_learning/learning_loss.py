@@ -3,8 +3,13 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def learning_loss(classification_model, loss_model, loader, sample_size):
-    classification_model = classification_model.to(device)
-    loss_model = loss_model.to(device)
+    device = next(classification_model.parameters()).device
+
+    if next(loss_model.parameters()).device != device:
+        raise ValueError(
+            "Classification model and loss model must be on the same device"
+        )
+
     classification_model.eval()
     loss_model.eval()
 
@@ -27,6 +32,6 @@ def learning_loss(classification_model, loss_model, loader, sample_size):
     loss_indices = torch.topk(losses, k=sample_size).indices
     indices = indices[loss_indices]
 
-    return indices
+    return indices.detach().cpu().tolist()
 
 

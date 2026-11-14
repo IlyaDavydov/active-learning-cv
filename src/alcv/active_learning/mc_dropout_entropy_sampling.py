@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
 from alcv.active_learning.entropy_sampling import entropy_calculate
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def mc_dropout_entropy_sampling(model, unlabeled_loader, sample_size, T : int):
-    model = model.to(device)
+    device = next(model.parameters()).device
     model.eval()
 
     for module in model.modules():
