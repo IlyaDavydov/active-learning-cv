@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "active-learning-cv"
+version = "0.1.0"
+description = "Reproducible active learning experiments for image classification"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["numpy", "torch", "torchvision", "PyYAML", "matplotlib", "scikit-learn"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

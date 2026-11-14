@@ -1,14 +1,2 @@
-numpy
-pandas
-matplotlib
-scikit-learn
-tqdm
-pyyaml
-pillow
-opencv-python
-jupyter
-notebook
-ipykernel
-torch
-torchvision
+-e .
 

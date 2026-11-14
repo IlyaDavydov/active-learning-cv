@@ -1,0 +1,35 @@
+dataset: cifar10
+model: simple_cnn_dropout
+dropout: 0.3
+
+strategies:
+  - random
+  - least_confidence
+  - margin
+  - entropy
+  - mc_dropout_entropy
+  - bald
+  - core_set
+  - badge
+  - learning_loss
+
+seeds: [1]
+
+initial_labeled_size: 500
+acquisition_size: 500
+num_rounds: 9
+
+epochs: 5
+batch_size: 32
+learning_rate: 0.01
+momentum: 0.9
+
+retrain_from_scratch: true
+deterministic: true
+num_workers: 0
+num_threads: 1
+mc_passes: 10
+distance_chunk_size: 2048
+
+data_dir: data/raw
+output_dir: reports/benchmark_v1

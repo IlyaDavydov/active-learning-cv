@@ -1,7 +1,5 @@
 import torch
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 def learning_loss(classification_model, loss_model, loader, sample_size):
     device = next(classification_model.parameters()).device
 
@@ -29,7 +27,7 @@ def learning_loss(classification_model, loss_model, loader, sample_size):
     losses = torch.cat(losses, dim=0).flatten()
     indices = torch.cat(indices, dim=0).flatten()
 
-    loss_indices = torch.topk(losses, k=sample_size).indices
+    loss_indices = torch.topk(losses, k=sample_size).indices.cpu()
     indices = indices[loss_indices]
 
     return indices.detach().cpu().tolist()

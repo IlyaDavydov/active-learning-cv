@@ -48,6 +48,9 @@ def compute_accuracy_and_cross_entropy_loss(model, loader, device):
             total_correct += (predictions == labels).sum().item()
             total_samples += batch_size
 
+    if total_samples == 0:
+        raise ValueError("Cannot evaluate an empty data loader")
+
     accuracy = total_correct / total_samples
     average_loss = total_loss / total_samples
 
