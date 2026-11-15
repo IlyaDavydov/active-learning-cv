@@ -1,6 +1,8 @@
-# Active Learning Platform for Computer Vision
+# Active Learning Benchmark for Computer Vision
 
 This project compares active learning strategies for computer vision tasks.
+The question is how acquisition strategies affect classification accuracy under
+the same labeling and training budget.
 
 ## Goal
 
@@ -79,6 +81,43 @@ Reproducibility is targeted within the same software/hardware environment, not
 bit-for-bit equality between CPU and CUDA or between PyTorch versions. The
 environment file records installed package versions, device, thread count, Git
 commit, and working-tree state, excluding the configured output directory.
+
+## Summarizing results
+
+After completing the runs, generate the comparison:
+
+```bash
+python scripts/summarize_results.py --input-dir reports/benchmark_v1
+```
+
+This creates `reports/benchmark_v1/summary/` with:
+
+- `learning_curves.png`: test accuracy versus the labeled pool size.
+- `summary.csv`: final accuracy and total training/query time for each strategy.
+- `summary.md`: a readable table and the plot, ready to open on GitHub.
+
+With multiple seeds, the plot shows the mean and one sample standard deviation;
+with one seed, no variability estimate is shown. CSV accuracy values are fractions
+in `[0, 1]`, while the plot and Markdown table display percentages. Timing values
+are seconds per full run, averaged across seeds; use the same hardware when
+comparing timings.
+
+The reporting script reads only the new `<strategy>/seed_*/metrics.csv` layout.
+It rejects unfinished runs, mismatched protocols/devices, or different seed sets
+between strategies. You can regenerate derived reports without changing raw run
+files. For a quick offline check, use `--input-dir reports/smoke` after running the
+smoke configuration.
+
+The older milestone scripts, tables, and plots are development history. Some
+precede the corrected pool updates; they are excluded from the unified comparison.
+Numerical conclusions should be based on freshly generated benchmark results.
+
+## Method references
+
+- [MC Dropout / BALD: Deep Bayesian Active Learning with Image Data](https://arxiv.org/abs/1703.02910)
+- [Core-Set: Active Learning for Convolutional Neural Networks](https://arxiv.org/abs/1708.00489)
+- [BADGE: Deep Batch Active Learning by Diverse, Uncertain Gradient Lower Bounds](https://arxiv.org/abs/1906.03671)
+- [Learning Loss for Active Learning](https://arxiv.org/abs/1905.03677) (the implementation here uses the simplified MSE objective described above)
 
 ## Project structure
 

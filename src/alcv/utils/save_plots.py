@@ -47,11 +47,6 @@ def save_line_plot(
     plt.savefig(save_path)
     plt.close(fig)
 
-from pathlib import Path
-
-import matplotlib.pyplot as plt
-
-
 def save_two_lines_plot(
     x_values: list[float],
     first_y_values: list[float],
@@ -106,45 +101,6 @@ def save_two_lines_plot(
             "с количеством second_y_values."
         )
 
-    save_path.parent.mkdir(parents=True, exist_ok=True)
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-
-    ax.plot(
-        x_values,
-        first_y_values,
-        marker="o",
-        label=first_label
-    )
-
-    ax.plot(
-        x_values,
-        second_y_values,
-        marker="o",
-        label=second_label
-    )
-
-    ax.set_title(title)
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
-    ax.grid(True)
-    ax.legend()
-
-    plt.tight_layout()
-    plt.savefig(save_path)
-    plt.close(fig)
-
-def save_two_lines_plot(
-    x_values: list[float],
-    first_y_values: list[float],
-    second_y_values: list[float],
-    first_label: str,
-    second_label: str,
-    save_path: Path,
-    title: str,
-    x_label: str,
-    y_label: str,
-) -> None:
     save_path.parent.mkdir(parents=True, exist_ok=True)
 
     fig, ax = plt.subplots(figsize=(8, 5))
