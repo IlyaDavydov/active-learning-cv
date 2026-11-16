@@ -53,9 +53,11 @@ def _read_run(path):
     return dict(strategy=strategy, seed=seed, budgets=budgets, accuracy=accuracy, train_seconds=float(train_time.sum()), query_seconds=float(query_time.sum()), protocol=protocol, config=config)
 
 
-def build_report(input_dir, output_dir=None):
+def build_report(input_dir, output_dir=None, seed=None):
     input_dir = Path(input_dir).resolve()
     paths = sorted(input_dir.glob("*/seed_*/metrics.csv"))
+    if seed is not None:
+        paths = [path for path in paths if path.parent.name == f"seed_{seed}"]
     if not paths:
         raise ValueError(f"No runs found under {input_dir}")
 
@@ -77,7 +79,7 @@ def build_report(input_dir, output_dir=None):
         if len(seeds) != len(set(seeds)) or seeds != reference_seeds:
             raise ValueError(f"{strategy}: all strategies must use the same unique seeds")
 
-    output_dir = Path(output_dir).resolve() if output_dir else input_dir / "summary"
+    output_dir = Path(output_dir).resolve() if output_dir else input_dir / ("summary" if seed is None else f"summary_seed_{seed}")
     output_dir.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(figsize=(9, 5))
     summary = []
@@ -94,6 +96,8 @@ def build_report(input_dir, output_dir=None):
 
     config = runs[0]["config"]
     title = "CIFAR-10: active learning comparison" if config["dataset"] == "cifar10" else "Synthetic data: pipeline check"
+    if seed is not None:
+        title += f" (seed {seed})"
     ax.set(title=title, xlabel="Labeled training images", ylabel="Test accuracy (%)", ylim=(0, 100))
     ax.grid(alpha=0.3)
     ax.legend(fontsize=8, ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.15))

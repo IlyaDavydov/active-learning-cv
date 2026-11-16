@@ -46,6 +46,22 @@ def test_report_rejects_incomplete_run(tmp_path):
         build_report(tmp_path)
 
 
+def test_report_can_select_one_seed(tmp_path):
+    for seed, accuracy in ((1, 0.5), (2, 0.6), (3, 0.7)):
+        write_run(tmp_path, "random", seed, accuracy)
+    for seed, accuracy in ((1, 0.5), (2, 0.6), (3, 0.7)):
+        output = build_report(tmp_path, seed=seed)
+        assert output == tmp_path / f"summary_seed_{seed}"
+        with (output / "summary.csv").open() as file:
+            row, = list(csv.DictReader(file))
+        assert int(row["n_seeds"]) == 1
+        assert float(row["test_accuracy_mean"]) == pytest.approx(accuracy)
+        assert row["test_accuracy_std"] == ""
+        assert (output / "learning_curves.png").stat().st_size > 0
+    with pytest.raises(ValueError, match="No runs found"):
+        build_report(tmp_path, seed=4)
+
+
 def test_report_rejects_mixed_protocols(tmp_path):
     write_run(tmp_path, "random")
     path = write_run(tmp_path, "entropy") / "config.json"

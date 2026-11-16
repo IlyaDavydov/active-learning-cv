@@ -8,9 +8,10 @@ def main():
     parser = argparse.ArgumentParser(description="Summarize completed active learning runs")
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--seed", type=int, help="Report only this seed; omit to average all seeds")
     args = parser.parse_args()
     try:
-        path = build_report(args.input_dir, args.output_dir)
+        path = build_report(args.input_dir, args.output_dir, seed=args.seed)
     except ValueError as error:
         parser.error(str(error))
     print(f"Saved summary.csv, summary.md and learning_curves.png to {path}")
