@@ -53,7 +53,7 @@ combinations from the YAML, or override them for a single run:
 python scripts/run_experiment.py --config configs/benchmark.yaml --strategy entropy --seed 1 --device cpu
 ```
 
-The default protocol uses CIFAR-10, one seed (`1`), an initial pool of 500 images,
+The default protocol uses CIFAR-10, seeds ('1', '2', '3'), an initial pool of 500 images,
 eight acquisitions of 500 images, and nine measurements from 500 to 4,500 labeled
 images. Every round trains a new model for five epochs, a deliberately limited
 compute budget. All nine strategies use the same SimpleCNN backbone with dropout
@@ -127,3 +127,26 @@ Numerical conclusions should be based on freshly generated benchmark results.
 - `models/` — trained models
 - `reports/` — results, figures, tables
 - `scripts/` — runnable scripts
+  
+## Results
+
+I compared all nine strategies on CIFAR-10 using seeds 1, 2 and 3.
+The labeled pool grew from 500 to 4,500 images. Each round started
+with a new model trained for five epochs.
+
+![Learning curves](reports/benchmark_v1/summary/learning_curves.png)
+
+Random sampling reached 39.33% final test accuracy, compared with
+39.38% for BADGE and 39.05% for margin sampling. BADGE's small
+advantage over random sampling was smaller than the variation
+between seeds, while its acquisition step took considerably longer.
+
+Under this training budget, the more complex strategies did not
+provide a clear improvement in final accuracy over random sampling.
+These results are specific to the small CNN and training settings
+used here.
+
+The shaded areas show one sample standard deviation across the
+three seeds.
+
+[Full results and timings](reports/benchmark_v1/summary/summary.md)

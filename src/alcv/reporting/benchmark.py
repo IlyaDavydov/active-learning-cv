@@ -119,6 +119,6 @@ def build_report(input_dir, output_dir=None, seed=None):
         if row["test_accuracy_std"] != "":
             accuracy += f" +/- {row['test_accuracy_std'] * 100:.2f} pp"
         lines.append(f"| {LABELS.get(row['strategy'], row['strategy'])} | {row['n_seeds']} | {row['final_labeled_size']} | {accuracy} | {row['train_seconds_mean']:.2f} | {row['query_seconds_mean']:.2f} |")
-    lines.extend(["", "With multiple seeds, accuracy is mean +/- sample standard deviation across seeds. With one seed, variability is not estimated.", "Training and query times are totals per run, averaged across seeds; compare timings on the same hardware.", "", "![Learning curves](learning_curves.png)", ""])
+    lines.extend(["", "![Learning curves](learning_curves.png)", ""])
     (output_dir / "summary.md").write_text("\n".join(lines), encoding="utf-8")
     return output_dir

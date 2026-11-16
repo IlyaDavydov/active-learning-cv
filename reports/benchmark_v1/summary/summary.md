@@ -15,7 +15,4 @@ Model: simple_cnn_dropout. Epochs per round: 5.
 | Margin | 3 | 4500 | 39.05% +/- 0.58 pp | 75.88 | 141.89 |
 | MC Dropout Entropy | 3 | 4500 | 34.42% +/- 0.89 pp | 74.24 | 966.85 |
 
-With multiple seeds, accuracy is mean +/- sample standard deviation across seeds. With one seed, variability is not estimated.
-Training and query times are totals per run, averaged across seeds; compare timings on the same hardware.
-
 ![Learning curves](learning_curves.png)

@@ -13,7 +13,7 @@ strategies:
   - badge
   - learning_loss
 
-seeds: [1]
+seeds: [1, 2, 3]
 
 initial_labeled_size: 500
 acquisition_size: 500
