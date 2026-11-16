@@ -1,0 +1,23 @@
+{
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.39",
+    "packages": {
+        "torch": "2.12.1+cpu",
+        "torchvision": "0.27.1+cpu",
+        "numpy": "2.5.0",
+        "PyYAML": "6.0.3",
+        "matplotlib": "3.11.0",
+        "scikit-learn": "1.9.0"
+    },
+    "device": "cpu",
+    "device_name": "CPU",
+    "cuda_version": null,
+    "torch_threads": 1,
+    "deterministic_algorithms": true,
+    "git_commit": "b84fa12699656045d7991ce34d3e6ec7e3d3ac6f",
+    "git_dirty": true,
+    "git_status": [
+        "?? \"h\\320\\262\""
+    ],
+    "git_status_excluded_output_dir": "/home/iliadavydov/projects/active-learning-cv/reports/benchmark_v1"
+}
